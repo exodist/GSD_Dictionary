@@ -14,24 +14,72 @@
 #include "include/gsd_dict.h"
 #include "error.h"
 
+typedef struct location location;
+
+typedef struct nlist nlist;
+typedef struct nlist_item nlist_item;
+
 typedef struct trash trash;
 typedef struct dict  dict;
 typedef struct set   set;
 typedef struct slot  slot;
 typedef struct xtrn  xtrn;
 typedef struct node  node;
-typedef struct flags flags;
 typedef struct usref usref;
 typedef struct sref  sref;
 
+typedef struct alloc_block alloc_block;
+typedef struct allocations allocations;
+
+typedef enum {
+    FREE = 0,
+
+    ALLOCATIONS = 1,
+
+    SET   = 2,
+    SLOT  = 3,
+    NODE  = 4,
+    USREF = 5,
+    SREF  = 6,
+    XTRN  = 7,
+
+    LOCATION = 8,
+
+    NLIST      =  9,
+    NLIST_ITEM = 10
+} type;
+
+struct alloc_block {
+    alloc_block *next;
+    trash * volatile top;
+    size_t idx;
+    size_t size;
+};
+
 struct trash {
     trash *next;
-    enum { OOPS = 0, SET, SLOT, NODE, SREF, XTRN } type;
+    type   type;
 
 #ifdef TRASH_CHECK
     char *fn;
     size_t ln;
 #endif
+};
+
+struct allocations {
+    trash trash;
+
+    alloc_block *sets;
+    alloc_block *slots;
+    alloc_block *xtrns;
+    alloc_block *nodes;
+    alloc_block *usrefs;
+    alloc_block *srefs;
+
+    alloc_block *locations;
+    
+    alloc_block *nlists;
+    alloc_block *nlist_items;
 };
 
 struct dict {
@@ -49,6 +97,8 @@ struct dict {
 
     epoch epochs[EPOCH_LIMIT];
     uint8_t epoch;
+
+    allocations *alloc;
 };
 
 struct set {
@@ -85,6 +135,7 @@ struct node {
 };
 
 struct usref {
+    trash trash;
     size_t  refcount;
     sref   *sref;
 };

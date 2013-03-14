@@ -62,13 +62,13 @@ timespec time_diff(timespec start, timespec end) {
 }
 
 int main() {
-    size_t min_ops = 1048576 / 2;
-    size_t max_ops = 1048576 * 2;
+    size_t min_ops = 1048576;
+    size_t max_ops = 1048576;
     size_t min_slots = 1024;
-    size_t max_slots = 1024 * 4 * 4 * 4;
+    size_t max_slots = 1024;
     size_t min_imbalance = 16;
     size_t max_imbalance = 16;
-    size_t min_threads = 1;
+    size_t min_threads = 8;
     size_t max_threads = 1024;
 
     dict_settings set = { 0, 0, NULL };

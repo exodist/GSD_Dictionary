@@ -114,7 +114,7 @@ rstat rebalance_insert( dict *d, set *st, slot **s, node *n, size_t ideal ) {
     xtrn *key = create_xtrn( d, n->key->value );
     if ( !key ) return rstat_mem;
 
-    node *new_node = create_node( key, n->usref, 1 );
+    node *new_node = create_node( d, key, n->usref, 1 );
     if ( !new_node ) {
         dispose( d, (trash *)key );
         return rstat_mem;
@@ -122,7 +122,7 @@ rstat rebalance_insert( dict *d, set *st, slot **s, node *n, size_t ideal ) {
 
     // If this is the root node, create the slot with the new node as root.
     if ( *s == NULL ) {
-        *s = create_slot( new_node );
+        *s = create_slot( d, new_node );
         if ( *s == NULL ) {
             dispose( d, (trash *)new_node );
             return rstat_mem;

@@ -22,14 +22,17 @@ void free_slot( dict *d, slot *s );
 void free_node( dict *d, node *n );
 void free_sref( dict *d, sref *r );
 void free_xtrn( dict *d, xtrn *x );
+void free_allocations( allocations *a );
+void free_alloc_block( alloc_block *b );
 
 rstat do_create( dict **d, dict_settings settings, dict_methods methods );
 
-set   *create_set( dict_settings settings, size_t slot_count );
-slot  *create_slot( node *root );
-node  *create_node( xtrn *key, usref *ref, size_t min_ref_count );
-usref *create_usref( sref *ref );
-sref  *create_sref( xtrn *x, dict_trigger *t );
+set   *create_set( dict *d, dict_settings settings, size_t slot_count );
+slot  *create_slot( dict *d, node *root );
+node  *create_node( dict *d, xtrn *key, usref *ref, size_t min_ref_count );
+usref *create_usref( dict *d, sref *ref );
+sref  *create_sref( dict *d, xtrn *x, dict_trigger *t );
 xtrn  *create_xtrn( dict *d, void *value );
+
 
 #endif

@@ -470,7 +470,7 @@ void *do_set_create( dict *d, epoch *e, void *key, void *val, create_type type, 
 
         if ( type == CREATE_XTRN ) return new_xtrn;
 
-        sref *new_sref = create_sref( new_xtrn, spec->trigger );
+        sref *new_sref = create_sref( d, new_xtrn, spec->trigger );
         if( !new_sref ) {
             if( new_xtrn ) dispose( d, (trash *)new_xtrn );
             return NULL;
@@ -480,7 +480,7 @@ void *do_set_create( dict *d, epoch *e, void *key, void *val, create_type type, 
             return new_sref;
         }
 
-        new_usref = create_usref( new_sref );
+        new_usref = create_usref( d, new_sref );
         if( !new_usref ) {
             dispose( d, (trash *)new_sref );
             return NULL;
@@ -493,7 +493,7 @@ void *do_set_create( dict *d, epoch *e, void *key, void *val, create_type type, 
         return NULL;
     }
 
-    node *new_node = create_node( new_xtrn_key, new_usref, 0 );
+    node *new_node = create_node( d, new_xtrn_key, new_usref, 0 );
     if ( !new_node ) {
         dispose( d, (trash *)new_usref );
         dispose( d, (trash *)new_xtrn_key );
@@ -501,7 +501,7 @@ void *do_set_create( dict *d, epoch *e, void *key, void *val, create_type type, 
     }
     if ( type == CREATE_NODE ) return new_node;
 
-    slot *new_slot = create_slot( new_node );
+    slot *new_slot = create_slot( d, new_node );
     if ( !new_slot ) {
         dispose( d, (trash *)new_node );
         return NULL;
